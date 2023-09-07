@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from './schemas/user.schema';
+import { User } from '../user/schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { RegisterDto } from './dto/register.dto';

@@ -5,8 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Posts } from './schemas/post.schema';
 import { Query  } from 'express-serve-static-core';
 import mongoose from 'mongoose';
-import { Request } from "express"
-import { User } from 'src/auth/schemas/user.schema';
+import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class PostService {

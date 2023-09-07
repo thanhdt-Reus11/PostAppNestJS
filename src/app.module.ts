@@ -7,6 +7,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessGuard } from './common/guards/access.guard';
+import { UserModule } from './user/user.module';
+import { AbilityModule } from './ability/ability.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { AccessGuard } from './common/guards/access.guard';
       inject: [ConfigService],
     }),
     AuthModule,
+    UserModule,
+    AbilityModule,
   ],
   controllers: [AppController],
   providers: [
