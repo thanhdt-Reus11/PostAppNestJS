@@ -6,7 +6,7 @@ import { User } from "../../user/schemas/user.schema";
 import { Model } from "mongoose";
 import * as bcrypt from 'bcryptjs';
 import { Request } from "express";
-import { Payload } from "../types/payload.type";
+import { Payload } from "../../common/types/payload.type";
 
 
 @Injectable()

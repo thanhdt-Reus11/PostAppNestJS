@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { RegisterDto } from './dto/register.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Tokens } from './types/tokens.type';
+import { Tokens } from '../common/types/tokens.type';
 import * as bcrypt from 'bcryptjs'
 import { LoginDto } from './dto/login.dto';
 

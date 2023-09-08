@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
-import { Tokens } from './types/tokens.type';
+import { Tokens } from '../common/types/tokens.type';
 import { LoginDto } from './dto/login.dto';
 import { RefreshGuard } from 'src/common/guards/refresh.guard';
 import { SkipAT } from 'src/common/decorators/skipAccess.decorator';

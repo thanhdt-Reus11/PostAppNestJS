@@ -1,11 +1,12 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
+import { InjectModel, MongooseModule } from "@nestjs/mongoose";
 import { User } from "./schemas/user.schema";
 import mongoose, { Model } from "mongoose";
 import { ForbiddenError } from "@casl/ability";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { AbilityFactory } from "src/ability/ability.factory";
 import { CreateRoleDta } from "./dto/create-role.dts";
+import { AuthService } from "src/auth/auth.service";
 
 
 @Injectable()
@@ -13,26 +14,28 @@ export class UserService {
     constructor(
         @InjectModel(User.name)
         private userModel: Model<User>,
-        private abilityFactory : AbilityFactory
+        private readonly authService : AuthService
     ) {}
 
-    async findOne(id: string) {
-        const data = this.userModel.findById(id);
-        if(!data) {
-            throw new BadRequestException('lol');
+    async findAll() : Promise<User[]> {
+        const users = await this.userModel.find();
+        return users;
+    }
+
+    async update(id: string, updateUserDto: UpdateUserDto)  {
+        if (!mongoose.isValidObjectId(id)) {
+            throw new BadRequestException('Please enter correct id');
         }
 
-        return data;
-    }
+        const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, {
+            new: true,
+            runValidators: true
+        })
 
-    // finAll() {}
-    // update() {}
-
-    create(createRoleDto: CreateRoleDta) {
-        return {message:  "Moi thu OK" };
-    }
-
-    update(id: number, createRoleDto: CreateRoleDta) {
-        return {message:  "Moi thu OKlllooo" };
+        if(!user) {
+            throw new NotFoundException('User not found')
+        }
+        
+        return await this.authService.refresh(user);
     }
 }

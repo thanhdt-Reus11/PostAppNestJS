@@ -5,8 +5,10 @@ import { ForbiddenError } from "@casl/ability";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateRoleDta } from "./dto/create-role.dts";
 import { AbilityFactory } from "../ability/ability.factory";
-import { Role } from "./entities/user.entity";
+import { UserEntity } from "./entities/user.entity";
 import { Action } from "../ability/ability.factory";
+import { Roles } from "src/common/decorators/roles.decorator";
+import { Role } from "src/common/types/role.enum";
 
 
 @Controller('user')
@@ -15,48 +17,22 @@ export class UserController {
     private abilityFactory : AbilityFactory
     ) {}
 
-
-    @Post()
-    async create(@Body() createRoleDto: CreateRoleDta, @Req() req) {
-        //const user = { id: 1, isAdmin:true, orgId: 1 };
-
-
-        const ability = this.abilityFactory.defineAbility(req.user);
-
-        const userToUpdate = await this.userService.findOne('64f7924da0800b7b5f0284d5');
-        try {
-            console.log(req.user.email);
-            console.log(userToUpdate.constructor.name);
-            ForbiddenError.from(ability).throwUnlessCan(Action.Create, userToUpdate);
-
-            return this.userService.create(createRoleDto);
-        } catch (error) {
-            if ( error instanceof ForbiddenError) {
-                //console.log(error);
-                throw new ForbiddenException(error.message);
-            }
-
-            throw new BadRequestException('Bad request');
-        }
-    }
-
     @Patch(':id')
+    @HttpCode(HttpStatus.OK)
     update(@Param('id') id: string,
-    @Body() createRoleDto: CreateRoleDta,
-    @Req() req) {
-        const userToUpdate = new Role();
-        userToUpdate.id = 2;
-        userToUpdate.isAdmin = true;
-        userToUpdate.orgId = 1
-
-        const user = { id: 1, isAdmin:true, orgId: 2};
+        @Body() updateUserDto: UpdateUserDto,
+        @Req() req
+    ) {
+        const userToUpdate = new UserEntity();
+        userToUpdate.id = id;
         const ability = this.abilityFactory.defineAbility(req.user);
         try {
-            ForbiddenError.from(ability).throwUnlessCan(Action.Update, userToUpdate);
-
-            return this.userService.update(+id, createRoleDto);
+            ForbiddenError
+                .from(ability)
+                .throwUnlessCan(Action.Update, userToUpdate);
+            return this.userService.update(id, updateUserDto);
         } catch (error) {
-            if ( error instanceof ForbiddenError) {
+            if (error instanceof ForbiddenError) {
                 throw new ForbiddenException(error.message);
             }
 
@@ -64,13 +40,25 @@ export class UserController {
         }
     }
 
-    // @Get('')
-    // @HttpCode(HttpStatus.OK)
-    // async findAll(
-    //     @Req() req : any
-    // ) : Promise<User[]> {
-    //     return this.userService.findAll(req.user);
-    // }
+    @Roles(Role.Admin)
+    @Get('')
+    @HttpCode(HttpStatus.OK)
+    async findAll(
+        @Req() req : any
+    ) : Promise<User[]> {
+        const ability = this.abilityFactory.defineAbility(req.user);
+        try {
+            ForbiddenError
+                .from(ability)
+                .throwUnlessCan(Action.Read, UserEntity);
+            return this.userService.findAll();
+        } catch (error) {
+            if (error instanceof ForbiddenError) {
+                throw new ForbiddenException(error.message);
+            }
+            throw new BadRequestException('Bad request');
+        }
+    }
 
     // @Patch(':id')
     // async update(

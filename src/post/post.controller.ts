@@ -1,13 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Query as ExpressQuery } from 'express-serve-static-core';
 import { Posts } from './schemas/post.schema';
+import { AbilityFactory, Action } from 'src/ability/ability.factory';
+import { ForbiddenError } from '@casl/ability';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { PostEntity } from './entities/post.entity';
 
 @Controller('post')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly abilityFactory : AbilityFactory
+    ) {}
 
   @Post()
   async create(
@@ -27,9 +34,27 @@ export class PostController {
 
   @Get(':id')
   async findOne(
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Req() req : any
     ): Promise<Posts> {
-    return this.postService.findOne(id);
+    const data = await this.postService.findOne(id);
+    const post = new PostEntity();
+    post.id = data._id,
+    post.isPublished = data.isPublished,
+    post.owner = data.owner.toString()
+
+    const ability = this.abilityFactory.defineAbility(req.user);
+    try {
+      ForbiddenError
+                .from(ability)
+                .throwUnlessCan(Action.Read, post);
+      return data;
+    } catch (error) {
+      if (error instanceof ForbiddenError) {
+        throw new ForbiddenException(error.message);
+    }
+    throw new BadRequestException('Bad request');
+    }
   }
 
   @Patch(':id')

@@ -1,5 +1,3 @@
-export class Role {
-    id: number;
-    isAdmin: boolean;
-    orgId: number;
+export class UserEntity {
+    id: string;
 }

@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../user/schemas/user.schema';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AccessTokenStrategy } from './strategies/access_token.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh_token.strategy';
@@ -15,7 +15,7 @@ import { RefreshTokenStrategy } from './strategies/refresh_token.strategy';
     MongooseModule.forFeature([{name: User.name, schema: UserSchema}])
   ],
   controllers: [AuthController],
-  providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
-  exports: [AccessTokenStrategy, RefreshTokenStrategy, PassportModule]
+  providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy, JwtService],
+  exports: [AccessTokenStrategy, RefreshTokenStrategy, PassportModule, JwtService]
 })
 export class AuthModule {}

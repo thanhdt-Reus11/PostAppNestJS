@@ -5,10 +5,11 @@ import { PostModule } from './post/post.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AccessGuard } from './common/guards/access.guard';
 import { UserModule } from './user/user.module';
 import { AbilityModule } from './ability/ability.module';
+import { RoleGuard } from './common/guards/role.guard';
 
 @Module({
   imports: [
@@ -34,7 +35,12 @@ import { AbilityModule } from './ability/ability.module';
     AppService, 
     {
       provide: APP_GUARD,
-      useClass: AccessGuard,},
+      useClass: AccessGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RoleGuard
+    }
     ],
 })
 export class AppModule {}
