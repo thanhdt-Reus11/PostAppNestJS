@@ -46,18 +46,7 @@ export class UserController {
     async findAll(
         @Req() req : any
     ) : Promise<User[]> {
-        const ability = this.abilityFactory.defineAbility(req.user);
-        try {
-            ForbiddenError
-                .from(ability)
-                .throwUnlessCan(Action.Read, UserEntity);
-            return this.userService.findAll();
-        } catch (error) {
-            if (error instanceof ForbiddenError) {
-                throw new ForbiddenException(error.message);
-            }
-            throw new BadRequestException('Bad request');
-        }
+        return this.userService.findAll();
     }
 
     // @Patch(':id')

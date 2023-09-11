@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, ForbiddenException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, ForbiddenException, BadRequestException, UseGuards } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -8,6 +8,8 @@ import { AbilityFactory, Action } from 'src/ability/ability.factory';
 import { ForbiddenError } from '@casl/ability';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { PostEntity } from './entities/post.entity';
+import { CheckAbility } from '../ability/ability.decorator';
+import { AbilityGuard } from 'src/ability/ability.guard';
 
 @Controller('post')
 export class PostController {
@@ -65,6 +67,8 @@ export class PostController {
     return this.postService.update(id, updatePostDto);
   }
 
+  @UseGuards(AbilityGuard)
+  @CheckAbility({action: Action.Delete, subject: PostEntity})
   @Delete(':id')
   async remove(
     @Param('id') id: string
@@ -72,3 +76,4 @@ export class PostController {
     return this.postService.remove(id);
   }
 }
+

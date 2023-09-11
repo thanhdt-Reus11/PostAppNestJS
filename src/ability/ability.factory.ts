@@ -29,7 +29,7 @@ export class AbilityFactory {
             can(Action.Read, PostEntity, {owner: {$eq : user._id.toString()}});
             can(Action.Read, PostEntity, {isPublished: true});
             can(Action.Update, PostEntity, {owner: {$eq : user._id.toString()}});
-            can(Action.Delete, PostEntity, {owner: {$eq : user._id.toString()}});
+            cannot(Action.Delete, PostEntity).because("Dung hoi lam gi");
         }
 
         return build({
