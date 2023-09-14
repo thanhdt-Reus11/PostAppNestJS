@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { PostModule } from './post/post.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -10,6 +8,7 @@ import { AccessGuard } from './common/guards/access.guard';
 import { UserModule } from './user/user.module';
 import { AbilityModule } from './ability/ability.module';
 import { RoleGuard } from './common/guards/role.guard';
+import { SocketIOAdapter } from './socket-io-adapter';
 
 @Module({
   imports: [
@@ -30,9 +29,8 @@ import { RoleGuard } from './common/guards/role.guard';
     UserModule,
     AbilityModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService, 
     {
       provide: APP_GUARD,
       useClass: AccessGuard

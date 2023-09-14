@@ -5,7 +5,6 @@ import mongoose, { Model } from "mongoose";
 import { ForbiddenError } from "@casl/ability";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { AbilityFactory } from "src/ability/ability.factory";
-import { CreateRoleDta } from "./dto/create-role.dts";
 import { AuthService } from "src/auth/auth.service";
 
 

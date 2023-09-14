@@ -1,3 +1,4 @@
+import { Socket } from "socket.io";
 
 
 export type Payload = {
@@ -5,3 +6,5 @@ export type Payload = {
     email: string,
     role: string
 }
+
+export type SocketWithAuth = Socket & Payload;

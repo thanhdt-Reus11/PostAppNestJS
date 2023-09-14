@@ -3,7 +3,6 @@ import { UserService } from "./user.service";
 import { User } from "./schemas/user.schema";
 import { ForbiddenError } from "@casl/ability";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { CreateRoleDta } from "./dto/create-role.dts";
 import { AbilityFactory } from "../ability/ability.factory";
 import { UserEntity } from "./entities/user.entity";
 import { Action } from "../ability/ability.factory";
