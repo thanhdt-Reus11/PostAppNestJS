@@ -47,7 +47,6 @@ export class PostGateWay
     this.logger.log(`Disconnected socket id: ${client.id}`);
     this.logger.debug(`Number of connected sockets: ${sockets.size}`);
 
-    // TODO - remove client from poll and send `participants_updated` event to remaining clients
   }
 
   @SubscribeMessage('message')
